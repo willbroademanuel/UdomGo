@@ -1,0 +1,286 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#E0F7FA">
+
+    <!-- HEADER -->
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="115dp"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:background="@drawable/login_header">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="SELECT COLLEGE"
+            android:textColor="#FFFFFF"
+            android:textSize="21sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="3dp"
+            android:text="Institutes &amp; Schools"
+            android:textColor="#FFFFFF"
+            android:textSize="13sp" />
+
+    </LinearLayout>
+
+
+    <!-- SCROLLABLE CONTENT -->
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:fillViewport="true"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingStart="18dp"
+            android:paddingEnd="18dp"
+            android:paddingTop="18dp"
+            android:paddingBottom="20dp">
+
+            <!-- COLLEGES -->
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="COLLEGES"
+                android:textColor="#1976D2"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:layout_marginTop="4dp"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/civeButton"
+                    android:layout_width="0dp"
+                    android:layout_height="48dp"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="8dp"
+                    android:background="@drawable/rounded_input"
+                    android:minHeight="48dp"
+                    android:text="CIVE"
+                    android:textColor="#f5f5f5"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:elevation="3dp" />
+
+                <Button
+                    android:id="@+id/cobeButton"
+                    android:layout_width="0dp"
+                    android:layout_height="48dp"
+                    android:layout_weight="1"
+                    android:layout_marginStart="8dp"
+                    android:background="@drawable/rounded_input"
+                    android:minHeight="48dp"
+                    android:text="CoBE"
+                    android:textColor="#f5f5f5"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:elevation="3dp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/coeseButton"
+                    android:layout_width="0dp"
+                    android:layout_height="48dp"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="8dp"
+                    android:background="@drawable/rounded_input"
+                    android:minHeight="48dp"
+                    android:text="CoESE"
+                    android:textColor="#f5f5f5"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:elevation="3dp" />
+
+                <Button
+                    android:id="@+id/coedButton"
+                    android:layout_width="0dp"
+                    android:layout_height="48dp"
+                    android:layout_weight="1"
+                    android:layout_marginStart="8dp"
+                    android:background="@drawable/rounded_input"
+                    android:minHeight="48dp"
+                    android:text="CoED"
+                    android:textColor="#f5f5f5"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:elevation="3dp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/chssButton"
+                    android:layout_width="0dp"
+                    android:layout_height="48dp"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="8dp"
+                    android:background="@drawable/rounded_input"
+                    android:minHeight="48dp"
+                    android:text="CHSS"
+                    android:textColor="#f5f5f5"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:elevation="3dp" />
+
+                <Button
+                    android:id="@+id/cnmsButton"
+                    android:layout_width="0dp"
+                    android:layout_height="48dp"
+                    android:layout_weight="1"
+                    android:layout_marginStart="8dp"
+                    android:background="@drawable/rounded_input"
+                    android:minHeight="48dp"
+                    android:text="CNMS"
+                    android:textColor="#f5f5f5"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:elevation="3dp" />
+
+            </LinearLayout>
+
+
+            <!-- INSTITUTES -->
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:text="INSTITUTES"
+                android:textColor="#1976D2"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:layout_marginTop="4dp"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/ciButton"
+                    android:layout_width="0dp"
+                    android:layout_height="48dp"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="8dp"
+                    android:background="@drawable/rounded_input"
+                    android:minHeight="48dp"
+                    android:text="CI"
+                    android:textColor="#f5f5f5"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:elevation="3dp" />
+
+                <Button
+                    android:id="@+id/idsButton"
+                    android:layout_width="0dp"
+                    android:layout_height="48dp"
+                    android:layout_weight="1"
+                    android:layout_marginStart="8dp"
+                    android:background="@drawable/rounded_input"
+                    android:minHeight="48dp"
+                    android:text="IDS"
+                    android:textColor="#f5f5f5"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:elevation="3dp" />
+
+            </LinearLayout>
+
+
+            <!-- SCHOOLS -->
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:text="SCHOOLS"
+                android:textColor="#1976D2"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:layout_marginTop="4dp"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/solButton"
+                    android:layout_width="0dp"
+                    android:layout_height="48dp"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="8dp"
+                    android:background="@drawable/rounded_input"
+                    android:minHeight="48dp"
+                    android:text="SoL"
+                    android:textColor="#f5f5f5"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:elevation="3dp" />
+
+                <Button
+                    android:id="@+id/somdButton"
+                    android:layout_width="0dp"
+                    android:layout_height="48dp"
+                    android:layout_weight="1"
+                    android:layout_marginStart="8dp"
+                    android:background="@drawable/rounded_input"
+                    android:minHeight="48dp"
+                    android:text="SoMD"
+                    android:textColor="#f5f5f5"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:elevation="3dp" />
+
+            </LinearLayout>
+
+
+            <Button
+                android:id="@+id/sonphButton"
+                android:layout_width="145dp"
+                android:layout_height="48dp"
+                android:layout_gravity="center"
+                android:background="@drawable/rounded_input"
+                android:minHeight="48dp"
+                android:text="SoNPH"
+                android:textColor="#f5f5f5"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:elevation="3dp" />
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</LinearLayout>

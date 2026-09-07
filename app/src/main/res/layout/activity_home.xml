@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#E0F7FA">
+
+    <!-- FRAGMENT CONTENT -->
+
+    <FrameLayout
+        android:id="@+id/fragmentContainer"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <!-- BOTTOM NAVIGATION -->
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="68dp"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:background="@drawable/bottom_nav_background"
+        android:elevation="10dp"
+        android:paddingTop="3dp"
+        android:paddingBottom="5dp">
+
+        <!-- HOME -->
+
+        <LinearLayout
+            android:id="@+id/homeNav"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center">
+
+            <ImageButton
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:minWidth="48dp"
+                android:minHeight="48dp"
+                android:background="@android:color/transparent"
+                android:src="@android:drawable/ic_menu_view"
+                android:contentDescription="Home"
+                app:tint="#000000" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="HOME"
+                android:textColor="#000000"
+                android:textSize="15sp"
+                android:layout_marginTop="-7dp"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
+
+        <!-- CHAT -->
+
+        <LinearLayout
+            android:id="@+id/chatNav"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center">
+
+            <ImageButton
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:minWidth="48dp"
+                android:minHeight="48dp"
+                android:background="@android:color/transparent"
+                android:src="@android:drawable/ic_dialog_email"
+                android:contentDescription="Chat"
+                app:tint="#000000" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="CHAT"
+                android:textColor="#000000"
+                android:textSize="14sp"
+                android:layout_marginTop="-9dp"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
+
+        <!-- MAP -->
+
+        <LinearLayout
+            android:id="@+id/mapNav"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center">
+
+            <ImageButton
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:minWidth="48dp"
+                android:minHeight="48dp"
+                android:background="@android:color/transparent"
+                android:src="@android:drawable/ic_menu_mylocation"
+                android:contentDescription="Map"
+                app:tint="#000000" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="MAP"
+                android:textColor="#000000"
+                android:textSize="14sp"
+                android:layout_marginTop="-9dp"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
+
+        <!-- GUIDE -->
+
+        <LinearLayout
+            android:id="@+id/guideNav"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center">
+
+            <ImageButton
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:minWidth="48dp"
+                android:minHeight="48dp"
+                android:background="@android:color/transparent"
+                android:src="@android:drawable/ic_menu_manage"
+                android:contentDescription="Guide"
+                app:tint="#000000" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="GUIDE"
+                android:textColor="#000000"
+                android:textSize="14sp"
+                android:layout_marginTop="-9dp"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
+
+        <!-- SERVICES -->
+
+        <LinearLayout
+            android:id="@+id/servicesNav"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center">
+
+            <ImageButton
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:minWidth="48dp"
+                android:minHeight="48dp"
+                android:background="@android:color/transparent"
+                android:src="@android:drawable/ic_menu_agenda"
+                android:contentDescription="Services"
+                app:tint="#000000" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="SERVICES"
+                android:textColor="#000000"
+                android:textSize="14sp"
+                android:layout_marginTop="-8dp"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>
