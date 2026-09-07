@@ -1,14 +1,171 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ServicesFragment">
+    android:orientation="vertical"
+    android:background="#E0F7FA">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <!-- HEADER -->
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="105dp"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:background="@drawable/login_header"
+        android:elevation="6dp">
 
-</FrameLayout>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="CAMPUS SERVICES"
+            android:textColor="#FFFFFF"
+            android:textSize="21sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="3dp"
+            android:text="Portals, Academic Services &amp; Welfare"
+            android:textColor="#81D4FA"
+            android:textSize="13sp" />
+
+    </LinearLayout>
+
+    <!-- CONTENT -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:paddingTop="16dp"
+        android:paddingBottom="24dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!-- SERVICE 1 -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@drawable/rounded_input"
+                android:padding="16dp"
+                android:layout_marginBottom="12dp"
+                android:elevation="2dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="📋 SR2 Student Portal"
+                    android:textColor="#102A43"
+                    android:textSize="15sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="Official student record system (sr2.udom.ac.tz). Log in with your Reg Number for semester course registration, viewing GPA and exam results, and hostel applications."
+                    android:textColor="#334155"
+                    android:textSize="13sp"
+                    android:lineSpacingExtra="2dp" />
+
+            </LinearLayout>
+
+            <!-- SERVICE 2 -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@drawable/rounded_input"
+                android:padding="16dp"
+                android:layout_marginBottom="12dp"
+                android:elevation="2dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="💳 GePG Fee Payments"
+                    android:textColor="#102A43"
+                    android:textSize="15sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="Tuition and accommodation fees are paid exclusively via Government Electronic Payment Gateway (GePG) control numbers generated on your SR2 account."
+                    android:textColor="#334155"
+                    android:textSize="13sp"
+                    android:lineSpacingExtra="2dp" />
+
+            </LinearLayout>
+
+            <!-- SERVICE 3 -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@drawable/rounded_input"
+                android:padding="16dp"
+                android:layout_marginBottom="12dp"
+                android:elevation="2dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="💻 ICT &amp; Eduroam WiFi"
+                    android:textColor="#102A43"
+                    android:textSize="15sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="Connect to university-wide high-speed Eduroam WiFi using your student email account. ICT support offices are located at CIVE Block 1."
+                    android:textColor="#334155"
+                    android:textSize="13sp"
+                    android:lineSpacingExtra="2dp" />
+
+            </LinearLayout>
+
+            <!-- SERVICE 4 -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@drawable/rounded_input"
+                android:padding="16dp"
+                android:layout_marginBottom="12dp"
+                android:elevation="2dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="🍽️ College Dining Services"
+                    android:textColor="#102A43"
+                    android:textSize="15sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="Student cafeterias operate in each college block providing affordable breakfast, lunch, and dinner options from 7:00 AM to 9:00 PM daily."
+                    android:textColor="#334155"
+                    android:textSize="13sp"
+                    android:lineSpacingExtra="2dp" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

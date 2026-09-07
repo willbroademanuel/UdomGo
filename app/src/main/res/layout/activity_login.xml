@@ -2,6 +2,7 @@
 
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -13,31 +14,38 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="300dp"
+        android:layout_height="280dp"
         android:orientation="vertical"
         android:gravity="center"
-        android:background="@drawable/login_header">
+        android:background="@drawable/login_header"
+        android:elevation="6dp">
 
         <!-- UDOM CIRCULAR LOGO -->
-
         <ImageView
             android:id="@+id/udomLogo"
-            android:layout_width="125dp"
-            android:layout_height="125dp"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
             android:src="@drawable/udom_logo"
             android:scaleType="centerInside"
             android:contentDescription="UDOM Logo" />
 
         <!-- UDOMGo -->
-
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:text="UDOMGo"
             android:textColor="#FFFFFF"
-            android:textSize="25sp"
+            android:textSize="26sp"
             android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:text="Campus Guide &amp; Navigation"
+            android:textColor="#81D4FA"
+            android:textSize="13sp" />
 
     </LinearLayout>
 
@@ -56,33 +64,33 @@
         android:paddingTop="25dp">
 
         <!-- STUDENT LOGIN -->
-
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Student Login"
             android:textColor="#102A43"
-            android:textSize="27sp"
+            android:textSize="24sp"
             android:textStyle="bold" />
 
 
         <!-- EMAIL -->
-
         <EditText
             android:id="@+id/emailField"
             android:layout_width="match_parent"
             android:layout_height="55dp"
-            android:layout_marginTop="22dp"
+            android:layout_marginTop="20dp"
             android:background="@drawable/rounded_input"
-            android:hint="Email"
+            android:hint="Email Address"
+            android:textColor="#102A43"
+            android:textColorHint="#64748B"
             android:paddingStart="18dp"
             android:paddingEnd="18dp"
             android:singleLine="true"
-            android:textSize="16sp" />
+            android:inputType="textEmailAddress"
+            android:textSize="15sp" />
 
 
         <!-- PASSWORD -->
-
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="55dp"
@@ -94,11 +102,13 @@
                 android:layout_height="match_parent"
                 android:background="@drawable/rounded_input"
                 android:hint="Password"
+                android:textColor="#102A43"
+                android:textColorHint="#64748B"
                 android:inputType="textPassword"
                 android:paddingStart="18dp"
                 android:paddingEnd="52dp"
                 android:singleLine="true"
-                android:textSize="16sp" />
+                android:textSize="15sp" />
 
             <ImageButton
                 android:id="@+id/passwordEye"
@@ -108,27 +118,28 @@
                 android:background="@android:color/transparent"
                 android:contentDescription="Show or hide password"
                 android:padding="12dp"
-                android:src="@android:drawable/ic_menu_view" />
+                android:src="@android:drawable/ic_menu_view"
+                app:tint="#64748B" />
 
         </FrameLayout>
 
 
         <!-- LOGIN BUTTON -->
-
         <Button
             android:id="@+id/loginButton"
             android:layout_width="match_parent"
             android:layout_height="55dp"
             android:layout_marginTop="22dp"
             android:background="@drawable/login_button"
+            app:backgroundTint="@null"
             android:text="LOGIN"
             android:textColor="#FFFFFF"
             android:textSize="16sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:elevation="3dp" />
 
 
         <!-- FORGOT PASSWORD -->
-
         <TextView
             android:id="@+id/forgotPassword"
             android:layout_width="wrap_content"
@@ -141,17 +152,18 @@
 
 
         <!-- CREATE ACCOUNT -->
-
         <Button
             android:id="@+id/createAccountButton"
             android:layout_width="match_parent"
             android:layout_height="52dp"
             android:layout_marginTop="18dp"
             android:background="@drawable/create_account_button"
+            app:backgroundTint="@null"
             android:text="CREATE ACCOUNT"
             android:textColor="#FFFFFF"
             android:textSize="15sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:elevation="3dp" />
 
     </LinearLayout>
 

@@ -79,7 +79,7 @@ public class ChatFragment extends Fragment {
             clearChatButton.setOnClickListener(v -> {
                 chatContainer.removeAllViews();
                 showWelcomeMessage();
-                Toast.makeText(requireContext(), "Chat cleared", Toast.LENGTH_SHORT).show();
+                Toast.makeText(requireContext(), "Chat refreshed", Toast.LENGTH_SHORT).show();
             });
         }
 
@@ -102,11 +102,13 @@ public class ChatFragment extends Fragment {
     }
 
     private void setupSuggestionChips(View root) {
-        setChipListener(root, R.id.chipColleges, "Tell me about UDOM colleges");
+        String myCollege = UserPreferences.getSelectedCollege(getContext());
+
+        setChipListener(root, R.id.chipColleges, "Tell me about my college (" + myCollege + ")");
         setChipListener(root, R.id.chipCive, "Tell me about CIVE");
         setChipListener(root, R.id.chipHostels, "How does hostel accommodation work?");
-        setChipListener(root, R.id.chipLibrary, "What are the library hours and services?");
-        setChipListener(root, R.id.chipCafeteria, "Where are the cafeterias and food spots?");
+        setChipListener(root, R.id.chipLibrary, "What are library hours and services?");
+        setChipListener(root, R.id.chipCafeteria, "Where is my nearest cafeteria?");
         setChipListener(root, R.id.chipFees, "How do I pay fees with GePG control number?");
         setChipListener(root, R.id.chipSr2, "How do I use the SR2 portal?");
         setChipListener(root, R.id.chipTransport, "How do I get around campus?");
@@ -121,15 +123,19 @@ public class ChatFragment extends Fragment {
     }
 
     private void showWelcomeMessage() {
+        Context context = getContext();
+        String myCollege = UserPreferences.getSelectedCollege(context);
+        String myCollegeName = UserPreferences.getSelectedCollegeFullName(context);
+
         String welcome = "👋 Hello! Welcome to UDOMGo Assistant.\n\n"
-                + "I can help you with campus information, including:\n"
-                + "• Colleges & Schools (CIVE, CoBE, CoED, etc.)\n"
-                + "• Hostels & Student Accommodation\n"
-                + "• Central Library Services & Hours\n"
-                + "• Cafeterias & Campus Dining\n"
-                + "• Fee Payments & SR2 Registration\n"
-                + "• Campus Transport & Health Center\n\n"
-                + "Tap any quick topic above or type your question below!";
+                + "🎯 Identified Profile: " + myCollege + " (" + myCollegeName + ")\n\n"
+                + "Responses are personalized for your college! You can ask me:\n"
+                + "• 'Where are my lectures or classes?'\n"
+                + "• 'Where is my nearest cafeteria?'\n"
+                + "• Hostels & Room Allocation\n"
+                + "• Library Opening Hours & Services\n"
+                + "• GePG Control Numbers & SR2 Registration\n\n"
+                + "Tap a quick topic above or type your question below!";
 
         addMessage(welcome, false);
     }
@@ -243,48 +249,72 @@ public class ChatFragment extends Fragment {
 
     private String getAssistantResponse(String rawQuery) {
         String query = rawQuery.toLowerCase(Locale.ROOT).trim();
+        String userCollege = UserPreferences.getSelectedCollege(getContext());
 
+        // Context-aware queries based on user's selected college
+        if (query.contains("my class") || query.contains("my lecture") || query.contains("where do i study") || query.contains("my room")) {
+            return getCollegeLocationInfo(userCollege);
+        }
+
+        if (query.contains("my cafeteria") || query.contains("nearest cafeteria") || query.contains("nearest food") || query.contains("where to eat")) {
+            return getCollegeCafeteriaInfo(userCollege);
+        }
+
+        if (query.contains("my college") || query.contains("my profile") || query.contains("who am i")) {
+            String name = UserPreferences.getSelectedCollegeFullName(getContext());
+            return "🎯 Your current student profile is identified as: " + userCollege + " (" + name + ").\n\n"
+                    + getCollegeLocationInfo(userCollege) + "\n\n"
+                    + "💡 You can switch your college identity at any time on the HOME screen.";
+        }
+
+        // General queries
         if (query.contains("cive") || query.contains("informatics") || query.contains("computer")) {
             return "💻 College of Informatics and Virtual Education (CIVE)\n\n"
-                    + "• Location: North-East campus.\n"
-                    + "• Key Buildings: Lecture Rooms A & B, Auditorium, Blocks 1–6, Specialized Computing Labs.\n"
-                    + "• Programs: Computer Science, Software Engineering, Telecommunications, Information Systems, Cyber Security.\n\n"
-                    + "💡 Tip: You can view exact CIVE lecture rooms on the MAP tab!";
+                    + "• Location: North-East campus zone.\n"
+                    + "• Facilities: Lecture Rooms A & B, Auditorium, Blocks 1–6, Computer Laboratories.\n"
+                    + "• Programs: Computer Science, Software Engineering, Telecommunications, Information Systems, Cyber Security.\n"
+                    + (userCollege.equalsIgnoreCase("CIVE") ? "\n⭐ Note: This is your currently selected college!" : "");
         }
 
         if (query.contains("cobe") || query.contains("business") || query.contains("economics") || query.contains("accounting")) {
             return "🏛️ College of Business and Economics (CoBE)\n\n"
-                    + "• Location: Near the main university administration complex.\n"
-                    + "• Programs: Accounting, Finance, Economics, Marketing, HR, Procurement.\n"
-                    + "• Facilities: Modern lecture auditoriums, departmental offices, and student cafeteria.";
+                    + "• Location: Central campus near administration block.\n"
+                    + "• Facilities: CoBE Auditoriums, lecture halls, and departmental library.\n"
+                    + "• Programs: Accounting, Finance, Marketing, Economics, Human Resources, Procurement.\n"
+                    + (userCollege.equalsIgnoreCase("CoBE") ? "\n⭐ Note: This is your currently selected college!" : "");
         }
 
         if (query.contains("coed") || query.contains("education") || query.contains("teacher")) {
             return "🎓 College of Education (CoED)\n\n"
-                    + "• Location: Central campus zone.\n"
-                    + "• Focus: Training secondary school educators, educational managers, and curriculum developers in Science and Arts.";
+                    + "• Location: Central academic wing.\n"
+                    + "• Focus: Science and Arts teacher education, pedagogy, and educational administration.\n"
+                    + (userCollege.equalsIgnoreCase("CoED") ? "\n⭐ Note: This is your currently selected college!" : "");
         }
 
         if (query.contains("chss") || query.contains("humanities") || query.contains("social")) {
             return "📚 College of Humanities and Social Sciences (CHSS)\n\n"
-                    + "• Location: West campus wing.\n"
-                    + "• Departments: Sociology, Political Science, Languages, History, and Geography.";
+                    + "• Location: West campus area.\n"
+                    + "• Departments: Sociology, Political Science, Languages, History, Geography.\n"
+                    + (userCollege.equalsIgnoreCase("CHSS") ? "\n⭐ Note: This is your currently selected college!" : "");
         }
 
         if (query.contains("cnms") || query.contains("natural") || query.contains("math") || query.contains("science") || query.contains("physics") || query.contains("chemistry")) {
             return "🔬 College of Natural and Mathematical Sciences (CNMS)\n\n"
-                    + "• Location: Central science zone.\n"
-                    + "• Facilities: Advanced physics, chemistry, biology laboratories, and mathematics research rooms.";
+                    + "• Location: Science complex area.\n"
+                    + "• Facilities: Mathematics research rooms, advanced physics, chemistry, biology laboratories.\n"
+                    + (userCollege.equalsIgnoreCase("CNMS") ? "\n⭐ Note: This is your currently selected college!" : "");
         }
 
         if (query.contains("coese") || query.contains("coet") || query.contains("engineering") || query.contains("mining") || query.contains("geology")) {
             return "🏗️ College of Earth Sciences and Engineering (CoESE)\n\n"
-                    + "• Focus: Mining Engineering, Petroleum Geology, Environmental Engineering, and Renewable Energy studies.";
+                    + "• Location: Engineering campus wing.\n"
+                    + "• Programs: Mining Engineering, Petroleum Geology, Environmental Engineering, Renewable Energy.\n"
+                    + (userCollege.equalsIgnoreCase("CoESE") ? "\n⭐ Note: This is your currently selected college!" : "");
         }
 
         if (query.contains("law") || query.contains("sol")) {
             return "⚖️ School of Law (SoL)\n\n"
-                    + "• Offers Bachelor of Laws (LL.B) and postgraduate legal programs with a dedicated moot courtroom.";
+                    + "• Offers Bachelor of Laws (LL.B) and postgraduate legal programs with a dedicated campus moot court.";
         }
 
         if (query.contains("somd") || query.contains("medicine") || query.contains("doctor") || query.contains("nursing") || query.contains("sonph")) {
@@ -295,38 +325,37 @@ public class ChatFragment extends Fragment {
 
         if (query.contains("colleges") || query.contains("faculty") || query.contains("faculties") || query.contains("schools")) {
             return "🏛️ UDOM Colleges & Schools:\n\n"
-                    + "1. CIVE – Informatics & Virtual Education\n"
-                    + "2. CoBE – Business & Economics\n"
-                    + "3. CoED – Education\n"
-                    + "4. CHSS – Humanities & Social Sciences\n"
-                    + "5. CNMS – Natural & Mathematical Sciences\n"
-                    + "6. CoESE – Earth Sciences & Engineering\n"
-                    + "7. School of Law (SoL)\n"
-                    + "8. School of Medicine & Health Sciences";
+                    + "• CIVE – Informatics & Virtual Education\n"
+                    + "• CoBE – Business & Economics\n"
+                    + "• CoED – Education\n"
+                    + "• CHSS – Humanities & Social Sciences\n"
+                    + "• CNMS – Natural & Mathematical Sciences\n"
+                    + "• CoESE – Earth Sciences & Engineering\n"
+                    + "• School of Law (SoL)\n"
+                    + "• School of Medicine (SoMD)\n"
+                    + "• School of Nursing (SoNPH)\n\n"
+                    + "💡 You can select any of these on the HOME screen to customize your profile.";
         }
 
         if (query.contains("hostel") || query.contains("accommodation") || query.contains("room") || query.contains("dorm") || query.contains("sleep")) {
             return "🏠 UDOM Accommodation & Hostels\n\n"
-                    + "• On-Campus: Hostels are organized into college blocks. Applications are made through the SR2 portal.\n"
-                    + "• Off-Campus: Popular student areas include Mkonze, Kisasa, Chimwaga, and Medeli.\n"
-                    + "• Tip: Apply early on SR2 at semester registration to secure on-campus rooms.";
+                    + "• On-Campus: Rooms are organized per college blocks. You apply via your SR2 portal.\n"
+                    + "• For " + userCollege + " students, hostel blocks are designated near your academic complex.\n"
+                    + "• Off-Campus: Popular areas include Mkonze, Kisasa, Medeli, and Chimwaga.";
         }
 
         if (query.contains("library") || query.contains("book") || query.contains("reading") || query.contains("study")) {
             return "📚 UDOM Central Library\n\n"
-                    + "• Services: Printed book collections, e-resource computer labs, discussion rooms.\n"
+                    + "• Location: Central campus.\n"
                     + "• Opening Hours:\n"
                     + "   - Mon – Fri: 08:00 AM – 10:00 PM\n"
                     + "   - Sat: 08:00 AM – 04:00 PM\n"
                     + "   - Sun: 02:00 PM – 08:00 PM\n"
-                    + "• Note: Always carry your Student ID card for entry and book borrowing.";
+                    + "• Carry your Student ID card for entry and book borrowing.";
         }
 
         if (query.contains("cafeteria") || query.contains("food") || query.contains("eat") || query.contains("lunch") || query.contains("breakfast") || query.contains("dinner") || query.contains("canteen")) {
-            return "🍽️ Campus Dining & Cafeterias\n\n"
-                    + "• Every college features a dedicated student cafeteria.\n"
-                    + "• Meals: Breakfast (tea, snacks), Lunch & Dinner (rice, ugali, beef, chicken, fish, beans, greens).\n"
-                    + "• Price range: TZS 1,500 – 3,500 per meal.";
+            return getCollegeCafeteriaInfo(userCollege);
         }
 
         if (query.contains("fee") || query.contains("control number") || query.contains("gepg") || query.contains("payment") || query.contains("pay") || query.contains("tuition")) {
@@ -334,55 +363,69 @@ public class ChatFragment extends Fragment {
                     + "1. Sign in to your SR2 account (sr2.udom.ac.tz).\n"
                     + "2. Go to 'Payment Invoices' and generate a GePG Control Number.\n"
                     + "3. Pay via Mobile Money (M-Pesa, Airtel, Tigo Pesa, HaloPesa) or CRDB / NMB bank.\n"
-                    + "4. Payment is verified automatically within a few minutes.";
+                    + "4. Retain the SMS confirmation receipt.";
         }
 
         if (query.contains("sr2") || query.contains("srmis") || query.contains("register") || query.contains("registration") || query.contains("result") || query.contains("portal")) {
             return "📋 SR2 Student Portal (sr2.udom.ac.tz)\n\n"
-                    + "• Use SR2 for:\n"
-                    + "  - Semester course registration\n"
-                    + "  - Viewing examination results & GPA\n"
-                    + "  - Generating fee control numbers\n"
-                    + "  - Hostel application\n"
-                    + "• Default login uses your Registration Number and chosen password.";
+                    + "• Official portal for " + userCollege + " course registration, GPA/results, control numbers, and hostel allocation.\n"
+                    + "• Log in using your Registration Number and password.";
         }
 
         if (query.contains("transport") || query.contains("bus") || query.contains("daladala") || query.contains("bajaji") || query.contains("how to reach") || query.contains("shuttle")) {
-            return "🚌 Transport to & Around UDOM\n\n"
-                    + "• From Town: Take a daladala or bus from Dodoma town center (Posta / Machinga Complex) to UDOM.\n"
-                    + "• On Campus: Campus shuttles and Bajajis run continuously connecting Roundabout, CIVE, CoBE, and CoED.\n"
-                    + "• Check the MAP tab to see walking routes and building directions!";
+            return "🚌 Campus Transport\n\n"
+                    + "• Campus shuttles connect the Roundabout to " + userCollege + " and surrounding colleges.\n"
+                    + "• Daladala city buses run directly between Dodoma Town (Posta) and UDOM.\n"
+                    + "• Bajajis operate at all college gates.";
         }
 
         if (query.contains("health") || query.contains("hospital") || query.contains("dispensary") || query.contains("clinic") || query.contains("sick")) {
             return "🏥 UDOM Health Center\n\n"
-                    + "• Located centrally on campus for primary healthcare, consultations, and emergency first aid.\n"
-                    + "• For specialized hospital care, Benjamin Mkapa Hospital is located adjacent to the campus.";
+                    + "• Located centrally on campus for primary consultations and outpatient treatment.\n"
+                    + "• Benjamin Mkapa Hospital is nearby for specialized clinical care.";
         }
 
         if (query.contains("hello") || query.contains("hi") || query.contains("mambo") || query.contains("habari") || query.contains("hey")) {
-            return "👋 Hello there! How can I assist you with UDOM today?\n\n"
-                    + "Feel free to ask about colleges, hostels, library, food, or fee payments!";
-        }
-
-        if (query.contains("help") || query.contains("what can you do") || query.contains("options")) {
-            return "💡 Here are questions you can ask me:\n"
-                    + "• 'Where is CIVE?'\n"
-                    + "• 'How does hostel accommodation work?'\n"
-                    + "• 'What are library hours?'\n"
-                    + "• 'How to pay tuition fees?'\n"
-                    + "• 'How to register on SR2?'\n"
-                    + "• 'Tell me about campus transport'";
+            return "👋 Hello! I recognize you as a " + userCollege + " student.\n\n"
+                    + "How can I help you today? Ask me about your classes, nearest cafeteria, library, or fees!";
         }
 
         return "🤖 Thank you for your question!\n\n"
-                + "To help you best, here are common topics you can ask me about:\n"
-                + "• Colleges (CIVE, CoBE, CoED, CHSS, CNMS, Law, Medicine)\n"
-                + "• Hostels & Accommodation\n"
-                + "• Library hours & services\n"
-                + "• Cafeteria & food on campus\n"
-                + "• Tuition fees & GePG payment\n"
-                + "• Campus transport & health center";
+                + "Since you are identified as a " + userCollege + " student, you can ask me:\n"
+                + "• 'Where are my classes or lectures?'\n"
+                + "• 'Where is my nearest cafeteria?'\n"
+                + "• 'Tell me about hostel accommodation'\n"
+                + "• 'How do I pay fees with control number?'\n"
+                + "• 'What are library opening hours?'";
+    }
+
+    private String getCollegeLocationInfo(String college) {
+        if (college.equalsIgnoreCase("CIVE")) {
+            return "📍 As a CIVE student, your lectures and labs are in Lecture Rooms A & B, CIVE Auditorium, and Blocks 1 to 6 in the North-East campus zone.";
+        } else if (college.equalsIgnoreCase("CoBE")) {
+            return "📍 As a CoBE student, your classes and seminars are held in the CoBE Lecture Theatres near the main administration zone.";
+        } else if (college.equalsIgnoreCase("CoED")) {
+            return "📍 As a CoED student, your lectures are conducted in the central College of Education academic blocks.";
+        } else if (college.equalsIgnoreCase("CHSS")) {
+            return "📍 As a CHSS student, your lectures take place in the College of Humanities and Social Sciences wing.";
+        } else if (college.equalsIgnoreCase("CNMS")) {
+            return "📍 As a CNMS student, your science classes and laboratory practicals are in the CNMS Science Complex.";
+        } else if (college.equalsIgnoreCase("CoESE")) {
+            return "📍 As a CoESE student, your engineering and geology lectures are in the Earth Sciences & Engineering block.";
+        } else if (college.equalsIgnoreCase("SoL")) {
+            return "📍 As a School of Law student, your lectures and moot sessions are in the Law Complex.";
+        } else if (college.equalsIgnoreCase("SoMD") || college.equalsIgnoreCase("SoNPH")) {
+            return "📍 As a Health Sciences student, your classes and clinical sessions are at the Medical Campus near Benjamin Mkapa Hospital.";
+        } else {
+            return "📍 You are registered under " + college + ". Use the MAP tab to view your college building and surroundings!";
+        }
+    }
+
+    private String getCollegeCafeteriaInfo(String college) {
+        return "🍽️ Nearest Dining for " + college + " Students:\n\n"
+                + "• Your designated college cafeteria is located adjacent to the " + college + " main complex.\n"
+                + "• Operating Hours: 7:00 AM – 9:00 PM.\n"
+                + "• Serving breakfast, lunch, and dinner (typical price: TZS 1,500 – 3,500).";
     }
 
     private int dpToPx(int dp) {

@@ -1,5 +1,6 @@
 package com.example.udomgo;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,7 +12,13 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class HomeFragment extends Fragment {
+
+    private final Map<String, Button> collegeButtons = new HashMap<>();
+    private final Map<String, String> collegeFullNames = new HashMap<>();
 
     public HomeFragment() {
         // Required empty constructor
@@ -19,7 +26,7 @@ public class HomeFragment extends Fragment {
 
     @Override
     public View onCreateView(
-            LayoutInflater inflater,
+            @NonNull LayoutInflater inflater,
             ViewGroup container,
             Bundle savedInstanceState) {
 
@@ -37,67 +44,69 @@ public class HomeFragment extends Fragment {
 
         super.onViewCreated(view, savedInstanceState);
 
-        // COLLEGES
+        // Register all colleges, institutes and schools
+        registerCollege(view, R.id.civeButton, "CIVE", "College of Informatics & Virtual Education");
+        registerCollege(view, R.id.cobeButton, "CoBE", "College of Business & Economics");
+        registerCollege(view, R.id.coeseButton, "CoESE", "College of Earth Sciences & Engineering");
+        registerCollege(view, R.id.coedButton, "CoED", "College of Education");
+        registerCollege(view, R.id.chssButton, "CHSS", "College of Humanities & Social Sciences");
+        registerCollege(view, R.id.cnmsButton, "CNMS", "College of Natural & Mathematical Sciences");
+        registerCollege(view, R.id.ciButton, "CI", "Confucius Institute");
+        registerCollege(view, R.id.idsButton, "IDS", "Institute of Development Studies");
+        registerCollege(view, R.id.solButton, "SoL", "School of Law");
+        registerCollege(view, R.id.somdButton, "SoMD", "School of Medicine");
+        registerCollege(view, R.id.sonphButton, "SoNPH", "School of Nursing & Public Health");
 
-        Button civeButton = view.findViewById(R.id.civeButton);
-        Button cobeButton = view.findViewById(R.id.cobeButton);
-        Button coeseButton = view.findViewById(R.id.coeseButton);
-        Button coedButton = view.findViewById(R.id.coedButton);
-        Button chssButton = view.findViewById(R.id.chssButton);
-        Button cnmsButton = view.findViewById(R.id.cnmsButton);
-
-        // INSTITUTES
-
-        Button ciButton = view.findViewById(R.id.ciButton);
-        Button idsButton = view.findViewById(R.id.idsButton);
-
-        // SCHOOLS
-
-        Button solButton = view.findViewById(R.id.solButton);
-        Button somdButton = view.findViewById(R.id.somdButton);
-        Button sonphButton = view.findViewById(R.id.sonphButton);
-
-
-        civeButton.setOnClickListener(v ->
-                showMessage("CIVE selected"));
-
-        cobeButton.setOnClickListener(v ->
-                showMessage("CoBE selected"));
-
-        coeseButton.setOnClickListener(v ->
-                showMessage("CoESE selected"));
-
-        coedButton.setOnClickListener(v ->
-                showMessage("CoED selected"));
-
-        chssButton.setOnClickListener(v ->
-                showMessage("CHSS selected"));
-
-        cnmsButton.setOnClickListener(v ->
-                showMessage("CNMS selected"));
-
-        ciButton.setOnClickListener(v ->
-                showMessage("CI selected"));
-
-        idsButton.setOnClickListener(v ->
-                showMessage("IDS selected"));
-
-        solButton.setOnClickListener(v ->
-                showMessage("SoL selected"));
-
-        somdButton.setOnClickListener(v ->
-                showMessage("SoMD selected"));
-
-        sonphButton.setOnClickListener(v ->
-                showMessage("SoNPH selected"));
+        // Load and apply saved user college
+        Context context = getContext();
+        String currentCollege = UserPreferences.getSelectedCollege(context);
+        updateActiveSelection(currentCollege);
     }
 
-    private void showMessage(String message) {
+    private void registerCollege(View root, int buttonId, String code, String fullName) {
+        Button button = root.findViewById(buttonId);
+        if (button != null) {
+            collegeButtons.put(code, button);
+            collegeFullNames.put(code, fullName);
 
+            button.setOnClickListener(v -> selectCollege(code));
+        }
+    }
+
+    private void selectCollege(String code) {
+        Context context = getContext();
+        if (context == null) return;
+
+        String fullName = collegeFullNames.get(code);
+        if (fullName == null) fullName = code;
+
+        // Persist user selection silently
+        UserPreferences.setSelectedCollege(context, code, fullName);
+
+        // Update UI button highlights
+        updateActiveSelection(code);
+
+        // Toast feedback
         Toast.makeText(
-                requireContext(),
-                message,
+                context,
+                code + " selected",
                 Toast.LENGTH_SHORT
         ).show();
+    }
+
+    private void updateActiveSelection(String activeCode) {
+        // Highlight selected button, unhighlight others
+        for (Map.Entry<String, Button> entry : collegeButtons.entrySet()) {
+            String code = entry.getKey();
+            Button btn = entry.getValue();
+
+            if (code.equalsIgnoreCase(activeCode)) {
+                btn.setBackgroundResource(R.drawable.college_btn_active);
+                btn.setTextColor(0xFFFFFFFF);
+            } else {
+                btn.setBackgroundResource(R.drawable.college_btn_inactive);
+                btn.setTextColor(0xFF102A43);
+            }
+        }
     }
 }

@@ -1,99 +1,96 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#DFF7FA">
 
-    <!-- ========================================================= -->
-    <!-- MAP                                                       -->
-    <!-- ========================================================= -->
-
+    <!-- MAP VIEW -->
     <org.maplibre.android.maps.MapView
         android:id="@+id/mapView"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-
-    <!-- ========================================================= -->
-    <!-- TOP NAVY HEADER                                           -->
-    <!-- ========================================================= -->
-
+    <!-- TOP HEADER -->
     <LinearLayout
         android:id="@+id/mapHeader"
         android:layout_width="match_parent"
-        android:layout_height="170dp"
+        android:layout_height="140dp"
         android:orientation="vertical"
-        android:gravity="center"
-        android:paddingTop="18dp"
-        android:paddingBottom="20dp"
-     android:background="@drawable/login_header"
+        android:gravity="top|center_horizontal"
+        android:paddingTop="20dp"
+        android:background="@drawable/login_header"
         android:elevation="8dp">
 
         <TextView
             android:id="@+id/mapTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="MAP"
+            android:text="UDOM CAMPUS MAP"
             android:textColor="#FFFFFF"
-            android:textSize="25sp"
+            android:textSize="20sp"
             android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:text="Live Campus Navigation &amp; Routes"
+            android:textColor="#81D4FA"
+            android:textSize="12sp" />
 
     </LinearLayout>
 
 
-    <!-- ========================================================= -->
-    <!-- SEARCH AREA                                               -->
-    <!-- ========================================================= -->
-
+    <!-- SEARCH AREA -->
     <LinearLayout
         android:id="@+id/searchArea"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="14dp"
         android:layout_marginEnd="14dp"
-        android:layout_marginTop="105dp"
+        android:layout_marginTop="82dp"
         android:orientation="vertical"
         android:elevation="12dp">
 
         <!-- SEARCH BAR -->
-
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="52dp"
+            android:layout_height="50dp"
             android:orientation="horizontal"
             android:gravity="center_vertical"
-            android:paddingStart="14dp"
+            android:background="@drawable/rounded_input"
+            android:paddingStart="12dp"
             android:paddingEnd="8dp">
 
             <TextView
-                android:layout_width="32dp"
+                android:layout_width="28dp"
                 android:layout_height="match_parent"
                 android:gravity="center"
                 android:text="⌕"
                 android:textColor="#555555"
-                android:textSize="27sp" />
+                android:textSize="24sp" />
 
             <EditText
                 android:id="@+id/mapSearch"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:background="@drawable/rounded_input"
-                android:hint="Search UDOM location"
+                android:background="@android:color/transparent"
+                android:hint="Search lecture room, college, building..."
                 android:inputType="text"
                 android:maxLines="1"
-                android:paddingStart="5dp"
-                android:paddingEnd="5dp"
-                android:textColor="#222222"
-                android:textColorHint="#777777"
-                android:textSize="15sp" />
+                android:paddingStart="6dp"
+                android:paddingEnd="6dp"
+                android:textColor="#102A43"
+                android:textColorHint="#94A3B8"
+                android:textSize="14sp" />
 
             <ImageButton
                 android:id="@+id/clearSearchButton"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
                 android:background="@android:color/transparent"
                 android:contentDescription="@string/clear_search"
                 android:src="@drawable/ic_clear"
@@ -103,14 +100,13 @@
 
 
         <!-- SEARCH SUGGESTIONS -->
-
         <ListView
             android:id="@+id/searchSuggestions"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:maxHeight="260dp"
+            android:maxHeight="240dp"
             android:background="@drawable/suggestion_background"
-            android:divider="#DDDDDD"
+            android:divider="#E2E8F0"
             android:dividerHeight="1dp"
             android:elevation="10dp"
             android:visibility="gone" />
@@ -118,24 +114,101 @@
     </LinearLayout>
 
 
-    <!-- ========================================================= -->
-    <!-- MY LOCATION BUTTON                                        -->
-    <!-- ========================================================= -->
-
+    <!-- MY LOCATION BUTTON -->
     <ImageButton
         android:id="@+id/myLocationButton"
-        android:layout_width="54dp"
-        android:layout_height="54dp"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         android:layout_gravity="end|bottom"
-        android:layout_marginEnd="18dp"
-        android:layout_marginBottom="82dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="90dp"
         android:background="@drawable/location_button_background"
         android:contentDescription="Go to my location"
         android:elevation="10dp"
-        android:padding="14dp"
+        android:padding="12dp"
         android:src="@drawable/ic_my_location" />
 
 
+    <!-- ROUTE INFO CARD -->
+    <LinearLayout
+        android:id="@+id/routeCard"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_marginStart="14dp"
+        android:layout_marginEnd="14dp"
+        android:layout_marginBottom="16dp"
+        android:background="@drawable/rounded_input"
+        android:elevation="14dp"
+        android:orientation="vertical"
+        android:padding="16dp"
+        android:visibility="gone">
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/routeDestinationTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Destination"
+                    android:textColor="#102A43"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/routeDistanceDetails"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:text="Tap to calculate route"
+                    android:textColor="#0284C7"
+                    android:textSize="13sp"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
+            <ImageButton
+                android:id="@+id/closeRouteButton"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:src="@drawable/ic_clear"
+                android:contentDescription="Close Route"
+                android:padding="6dp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/startRouteButton"
+                android:layout_width="0dp"
+                android:layout_height="44dp"
+                android:layout_weight="1"
+                android:background="@drawable/home_college_button"
+                app:backgroundTint="@null"
+                android:text="🚶 Show Walking Route"
+                android:textColor="#102A43"
+                android:textSize="13sp"
+                android:textStyle="bold"
+                android:elevation="2dp" />
+
+        </LinearLayout>
+
+    </LinearLayout>
 
 </FrameLayout>

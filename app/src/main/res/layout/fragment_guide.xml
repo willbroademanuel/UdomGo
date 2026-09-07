@@ -1,14 +1,200 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".GuideFragment">
+    android:orientation="vertical"
+    android:background="#E0F7FA">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <!-- HEADER -->
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="105dp"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:background="@drawable/login_header"
+        android:elevation="6dp">
 
-</FrameLayout>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="CAMPUS GUIDE"
+            android:textColor="#FFFFFF"
+            android:textSize="21sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="3dp"
+            android:text="Essential Student Navigation Tips"
+            android:textColor="#81D4FA"
+            android:textSize="13sp" />
+
+    </LinearLayout>
+
+    <!-- CONTENT -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:paddingTop="16dp"
+        android:paddingBottom="24dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!-- GUIDE ITEM 1 -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@drawable/rounded_input"
+                android:padding="16dp"
+                android:layout_marginBottom="12dp"
+                android:elevation="2dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="🏛️ 1. Campus Layout &amp; Finding Rooms"
+                    android:textColor="#102A43"
+                    android:textSize="15sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:text="UDOM is divided into college zones. CIVE is North-East, CoBE and Administration are central, and Medicine is adjacent to BMH. Use the MAP tab to view college buildings, lecture theatres (LR A/B), and auditoriums."
+                    android:textColor="#334155"
+                    android:textSize="13sp"
+                    android:lineSpacingExtra="2dp" />
+
+            </LinearLayout>
+
+            <!-- GUIDE ITEM 2 -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@drawable/rounded_input"
+                android:padding="16dp"
+                android:layout_marginBottom="12dp"
+                android:elevation="2dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="🏠 2. Hostels &amp; Off-Campus Housing"
+                    android:textColor="#102A43"
+                    android:textSize="15sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:text="On-campus hostel rooms are applied per semester through the SR2 portal. If staying off-campus, common student areas include Mkonze, Kisasa, Medeli, and Chimwaga, all served by frequent daladala routes."
+                    android:textColor="#334155"
+                    android:textSize="13sp"
+                    android:lineSpacingExtra="2dp" />
+
+            </LinearLayout>
+
+            <!-- GUIDE ITEM 3 -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@drawable/rounded_input"
+                android:padding="16dp"
+                android:layout_marginBottom="12dp"
+                android:elevation="2dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="📚 3. Central Library Guide"
+                    android:textColor="#102A43"
+                    android:textSize="15sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:text="Central Library opens Monday to Friday from 8:00 AM to 10:00 PM (Saturdays 8am–4pm, Sundays 2pm–8pm). A valid student identity card is strictly required for entry and borrowing printed books."
+                    android:textColor="#334155"
+                    android:textSize="13sp"
+                    android:lineSpacingExtra="2dp" />
+
+            </LinearLayout>
+
+            <!-- GUIDE ITEM 4 -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@drawable/rounded_input"
+                android:padding="16dp"
+                android:layout_marginBottom="12dp"
+                android:elevation="2dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="🚌 4. Getting Around UDOM"
+                    android:textColor="#102A43"
+                    android:textSize="15sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:text="• Campus shuttles operate between the main Roundabout and colleges.\n• City buses (Daladala) run between Posta / Machinga complex in town and UDOM.\n• Bajajis are readily available at college gates for quick campus commutes."
+                    android:textColor="#334155"
+                    android:textSize="13sp"
+                    android:lineSpacingExtra="2dp" />
+
+            </LinearLayout>
+
+            <!-- GUIDE ITEM 5 -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@drawable/rounded_input"
+                android:padding="16dp"
+                android:layout_marginBottom="12dp"
+                android:elevation="2dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="🏥 5. Health &amp; Emergencies"
+                    android:textColor="#102A43"
+                    android:textSize="15sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:text="The UDOM Health Center provides outpatient consultations, pharmacy, and first aid for registered students. Specialized clinical services are provided at Benjamin Mkapa Hospital near the Medical campus."
+                    android:textColor="#334155"
+                    android:textSize="13sp"
+                    android:lineSpacingExtra="2dp" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>
