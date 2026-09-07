@@ -92,6 +92,11 @@ public class HomeFragment extends Fragment {
                 code + " selected",
                 Toast.LENGTH_SHORT
         ).show();
+
+        // Immediately land on Chat tab
+        if (getActivity() instanceof HomeActivity) {
+            ((HomeActivity) getActivity()).navigateToTab(HomeActivity.TAB_CHAT);
+        }
     }
 
     private void updateActiveSelection(String activeCode) {

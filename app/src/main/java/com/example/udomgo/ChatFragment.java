@@ -21,10 +21,13 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 public class ChatFragment extends Fragment {
@@ -34,6 +37,7 @@ public class ChatFragment extends Fragment {
     private ImageButton clearChatButton;
     private LinearLayout chatContainer;
     private ScrollView chatScrollView;
+    private DrawerLayout chatDrawerLayout;
 
     private final SimpleDateFormat timeFormat =
             new SimpleDateFormat("HH:mm", Locale.getDefault());
@@ -74,12 +78,47 @@ public class ChatFragment extends Fragment {
         // Send button
         sendButton.setOnClickListener(v -> sendMessage());
 
-        // Clear Chat button
+        // Drawer Layout
+        chatDrawerLayout = view.findViewById(R.id.chatDrawerLayout);
+
+        // View Chat History button (Opens ChatGPT-style sliding sidebar)
+        ImageButton chatHistoryButton = view.findViewById(R.id.chatHistoryButton);
+        if (chatHistoryButton != null) {
+            chatHistoryButton.setOnClickListener(v -> openChatSidebar());
+        }
+
+        // Sidebar Close button
+        View closeBtn = view.findViewById(R.id.chatDrawerCloseBtn);
+        if (closeBtn != null) {
+            closeBtn.setOnClickListener(v -> closeChatSidebar());
+        }
+
+        // Sidebar "+ New Chat" button
+        View newChatBtn = view.findViewById(R.id.sidebarNewChatBtn);
+        if (newChatBtn != null) {
+            newChatBtn.setOnClickListener(v -> startNewChat());
+        }
+
+        // Sidebar "Clear Chat History" button
+        View clearHistoryBtn = view.findViewById(R.id.sidebarClearHistoryBtn);
+        if (clearHistoryBtn != null) {
+            clearHistoryBtn.setOnClickListener(v -> confirmClearAllHistory());
+        }
+
+        // Clear Chat button (Deletes from SQLite)
         if (clearChatButton != null) {
             clearChatButton.setOnClickListener(v -> {
+                Context context = getContext();
+                if (context != null) {
+                    String userEmail = UserPreferences.getCurrentUserEmail(context);
+                    if (TextUtils.isEmpty(userEmail)) {
+                        userEmail = UserPreferences.DEMO_EMAIL;
+                    }
+                    DatabaseHelper.getInstance(context).clearChatHistory(userEmail);
+                }
                 chatContainer.removeAllViews();
                 showWelcomeMessage();
-                Toast.makeText(requireContext(), "Chat refreshed", Toast.LENGTH_SHORT).show();
+                Toast.makeText(requireContext(), "Chat history cleared", Toast.LENGTH_SHORT).show();
             });
         }
 
@@ -95,10 +134,29 @@ public class ChatFragment extends Fragment {
             return false;
         });
 
-        // Add Initial Welcome message
-        if (chatContainer.getChildCount() == 0) {
-            showWelcomeMessage();
+        // Ensure chat view scrolls up above the soft keyboard
+        chatInput.setOnFocusChangeListener((v, hasFocus) -> {
+            if (hasFocus) {
+                chatScrollView.postDelayed(() -> chatScrollView.fullScroll(View.FOCUS_DOWN), 100);
+                chatScrollView.postDelayed(() -> chatScrollView.fullScroll(View.FOCUS_DOWN), 300);
+            }
+        });
+        chatInput.setOnClickListener(v -> {
+            chatScrollView.postDelayed(() -> chatScrollView.fullScroll(View.FOCUS_DOWN), 100);
+            chatScrollView.postDelayed(() -> chatScrollView.fullScroll(View.FOCUS_DOWN), 300);
+        });
+
+        // Automatically scroll to bottom whenever the layout compresses (e.g. keyboard rises)
+        if (chatContainer != null) {
+            chatContainer.addOnLayoutChangeListener((v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom) -> {
+                if (bottom < oldBottom) {
+                    chatScrollView.post(() -> chatScrollView.fullScroll(View.FOCUS_DOWN));
+                }
+            });
         }
+
+        // Load persisted conversation from SQLite
+        loadChatHistory();
     }
 
     private void setupSuggestionChips(View root) {
@@ -122,6 +180,180 @@ public class ChatFragment extends Fragment {
         }
     }
 
+    private void loadChatHistory() {
+        Context context = getContext();
+        if (context == null) return;
+
+        chatContainer.removeAllViews();
+        String userEmail = UserPreferences.getCurrentUserEmail(context);
+        if (TextUtils.isEmpty(userEmail)) {
+            userEmail = UserPreferences.DEMO_EMAIL;
+        }
+
+        List<DatabaseHelper.ChatMessageItem> history =
+                DatabaseHelper.getInstance(context).getChatHistory(userEmail);
+
+        if (history.isEmpty()) {
+            showWelcomeMessage();
+        } else {
+            for (DatabaseHelper.ChatMessageItem item : history) {
+                String time = item.timestamp != null ? item.timestamp : timeFormat.format(new Date());
+                if (time.length() >= 16 && time.contains(" ")) {
+                    try {
+                        time = time.substring(11, 16);
+                    } catch (Exception ignored) {}
+                }
+                renderMessageBubble(item.message, "user".equalsIgnoreCase(item.sender), time);
+            }
+            chatScrollView.post(() -> chatScrollView.fullScroll(View.FOCUS_DOWN));
+        }
+    }
+
+
+
+    public void openChatSidebar() {
+        if (chatDrawerLayout != null) {
+            populateSidebarHistory();
+            chatDrawerLayout.openDrawer(GravityCompat.START);
+        }
+    }
+
+    public void closeChatSidebar() {
+        if (chatDrawerLayout != null && chatDrawerLayout.isDrawerOpen(GravityCompat.START)) {
+            chatDrawerLayout.closeDrawer(GravityCompat.START);
+        }
+    }
+
+    private void startNewChat() {
+        closeChatSidebar();
+        chatContainer.removeAllViews();
+        showWelcomeMessage();
+        Toast.makeText(requireContext(), "Started a new chat session", Toast.LENGTH_SHORT).show();
+    }
+
+    private void confirmClearAllHistory() {
+        Context context = getContext();
+        if (context == null) return;
+
+        String userEmail = UserPreferences.getCurrentUserEmail(context);
+        if (TextUtils.isEmpty(userEmail)) {
+            userEmail = UserPreferences.DEMO_EMAIL;
+        }
+
+        final String finalEmail = userEmail;
+        new androidx.appcompat.app.AlertDialog.Builder(context)
+                .setTitle("Clear Chat History")
+                .setMessage("Are you sure you want to permanently clear all conversation history from the SQLite database?")
+                .setPositiveButton("Clear All", (dialog, which) -> {
+                    DatabaseHelper.getInstance(context).clearChatHistory(finalEmail);
+                    chatContainer.removeAllViews();
+                    showWelcomeMessage();
+                    populateSidebarHistory();
+                    Toast.makeText(context, "All chat history cleared from SQLite", Toast.LENGTH_SHORT).show();
+                })
+                .setNegativeButton("Cancel", null)
+                .show();
+    }
+
+    private void populateSidebarHistory() {
+        View root = getView();
+        if (root == null || getContext() == null) return;
+
+        LinearLayout container = root.findViewById(R.id.sidebarHistoryContainer);
+        TextView emptyText = root.findViewById(R.id.sidebarEmptyText);
+        TextView statusText = root.findViewById(R.id.sidebarDbStatusText);
+        if (container == null) return;
+
+        // Reset list but keep empty state view
+        container.removeAllViews();
+        if (emptyText != null) {
+            container.addView(emptyText);
+        }
+
+        String userEmail = UserPreferences.getCurrentUserEmail(getContext());
+        if (TextUtils.isEmpty(userEmail)) {
+            userEmail = UserPreferences.DEMO_EMAIL;
+        }
+
+        List<DatabaseHelper.ChatMessageItem> history =
+                DatabaseHelper.getInstance(getContext()).getChatHistory(userEmail);
+
+        if (statusText != null) {
+            statusText.setText("● SQLite DB • " + history.size() + " messages saved");
+        }
+
+        if (history.isEmpty()) {
+            if (emptyText != null) emptyText.setVisibility(View.VISIBLE);
+            return;
+        }
+
+        if (emptyText != null) emptyText.setVisibility(View.GONE);
+
+        // Render user query items in reverse chronological order (newest first)
+        for (int i = history.size() - 1; i >= 0; i--) {
+            DatabaseHelper.ChatMessageItem item = history.get(i);
+            if (!"user".equalsIgnoreCase(item.sender)) continue;
+
+            LinearLayout card = new LinearLayout(getContext());
+            card.setOrientation(LinearLayout.VERTICAL);
+            card.setBackgroundResource(R.drawable.sidebar_item_bg);
+            card.setPadding(dpToPx(12), dpToPx(10), dpToPx(12), dpToPx(10));
+            card.setClickable(true);
+            card.setFocusable(true);
+
+            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT
+            );
+            lp.setMargins(0, 0, 0, dpToPx(8));
+            card.setLayoutParams(lp);
+
+            // Title row (Icon + Question snippet)
+            LinearLayout titleRow = new LinearLayout(getContext());
+            titleRow.setOrientation(LinearLayout.HORIZONTAL);
+            titleRow.setGravity(Gravity.CENTER_VERTICAL);
+
+            TextView icon = new TextView(getContext());
+            icon.setText("💬 ");
+            icon.setTextSize(13);
+            titleRow.addView(icon);
+
+            TextView title = new TextView(getContext());
+            title.setText(item.message);
+            title.setMaxLines(2);
+            title.setEllipsize(TextUtils.TruncateAt.END);
+            title.setTextColor(0xFFE2E8F0);
+            title.setTextSize(13);
+            title.setTypeface(null, android.graphics.Typeface.BOLD);
+            LinearLayout.LayoutParams titleLp = new LinearLayout.LayoutParams(
+                    0, LinearLayout.LayoutParams.WRAP_CONTENT, 1.0f
+            );
+            title.setLayoutParams(titleLp);
+            titleRow.addView(title);
+
+            card.addView(titleRow);
+
+            // Timestamp row
+            if (!TextUtils.isEmpty(item.timestamp)) {
+                TextView timeText = new TextView(getContext());
+                timeText.setText("⏰ " + item.timestamp);
+                timeText.setTextColor(0xFF64748B);
+                timeText.setTextSize(11);
+                timeText.setPadding(dpToPx(20), dpToPx(3), 0, 0);
+                card.addView(timeText);
+            }
+
+            // Click card to re-ask or inspect in chat and close sidebar
+            final String clickedQuestion = item.message;
+            card.setOnClickListener(v -> {
+                closeChatSidebar();
+                handleUserQuery(clickedQuestion);
+            });
+
+            container.addView(card);
+        }
+    }
+
     private void showWelcomeMessage() {
         Context context = getContext();
         String myCollege = UserPreferences.getSelectedCollege(context);
@@ -137,7 +369,7 @@ public class ChatFragment extends Fragment {
                 + "• GePG Control Numbers & SR2 Registration\n\n"
                 + "Tap a quick topic above or type your question below!";
 
-        addMessage(welcome, false);
+        addMessage(welcome, false, false);
     }
 
     private void sendMessage() {
@@ -151,8 +383,8 @@ public class ChatFragment extends Fragment {
     }
 
     private void handleUserQuery(String question) {
-        // Add User message
-        addMessage(question, true);
+        // Add User message and save to SQLite
+        addMessage(question, true, true);
 
         // Hide keyboard smoothly
         hideKeyboard();
@@ -161,11 +393,35 @@ public class ChatFragment extends Fragment {
         new Handler(Looper.getMainLooper()).postDelayed(() -> {
             if (!isAdded()) return;
             String answer = getAssistantResponse(question);
-            addMessage(answer, false);
+            // Add Assistant message and save to SQLite
+            addMessage(answer, false, true);
         }, 350);
     }
 
     private void addMessage(String message, boolean isUser) {
+        addMessage(message, isUser, true);
+    }
+
+    private void addMessage(String message, boolean isUser, boolean saveToDb) {
+        Context context = getContext();
+        if (context == null) return;
+
+        if (saveToDb) {
+            String userEmail = UserPreferences.getCurrentUserEmail(context);
+            if (TextUtils.isEmpty(userEmail)) {
+                userEmail = UserPreferences.DEMO_EMAIL;
+            }
+            DatabaseHelper.getInstance(context).insertChatMessage(
+                    userEmail,
+                    isUser ? "user" : "assistant",
+                    message
+            );
+        }
+
+        renderMessageBubble(message, isUser, timeFormat.format(new Date()));
+    }
+
+    private void renderMessageBubble(String message, boolean isUser, String formattedTime) {
         Context context = getContext();
         if (context == null) return;
 
@@ -215,7 +471,7 @@ public class ChatFragment extends Fragment {
 
         // Timestamp
         TextView timeView = new TextView(context);
-        timeView.setText(timeFormat.format(new Date()));
+        timeView.setText(formattedTime);
         timeView.setTextSize(10);
         timeView.setPadding(0, dpToPx(4), 0, 0);
 
@@ -251,7 +507,7 @@ public class ChatFragment extends Fragment {
         String query = rawQuery.toLowerCase(Locale.ROOT).trim();
         String userCollege = UserPreferences.getSelectedCollege(getContext());
 
-        // Context-aware queries based on user's selected college
+        // 1. Context-aware queries based on user's selected college
         if (query.contains("my class") || query.contains("my lecture") || query.contains("where do i study") || query.contains("my room")) {
             return getCollegeLocationInfo(userCollege);
         }
@@ -267,129 +523,24 @@ public class ChatFragment extends Fragment {
                     + "💡 You can switch your college identity at any time on the HOME screen.";
         }
 
-        // General queries
-        if (query.contains("cive") || query.contains("informatics") || query.contains("computer")) {
-            return "💻 College of Informatics and Virtual Education (CIVE)\n\n"
-                    + "• Location: North-East campus zone.\n"
-                    + "• Facilities: Lecture Rooms A & B, Auditorium, Blocks 1–6, Computer Laboratories.\n"
-                    + "• Programs: Computer Science, Software Engineering, Telecommunications, Information Systems, Cyber Security.\n"
-                    + (userCollege.equalsIgnoreCase("CIVE") ? "\n⭐ Note: This is your currently selected college!" : "");
-        }
-
-        if (query.contains("cobe") || query.contains("business") || query.contains("economics") || query.contains("accounting")) {
-            return "🏛️ College of Business and Economics (CoBE)\n\n"
-                    + "• Location: Central campus near administration block.\n"
-                    + "• Facilities: CoBE Auditoriums, lecture halls, and departmental library.\n"
-                    + "• Programs: Accounting, Finance, Marketing, Economics, Human Resources, Procurement.\n"
-                    + (userCollege.equalsIgnoreCase("CoBE") ? "\n⭐ Note: This is your currently selected college!" : "");
-        }
-
-        if (query.contains("coed") || query.contains("education") || query.contains("teacher")) {
-            return "🎓 College of Education (CoED)\n\n"
-                    + "• Location: Central academic wing.\n"
-                    + "• Focus: Science and Arts teacher education, pedagogy, and educational administration.\n"
-                    + (userCollege.equalsIgnoreCase("CoED") ? "\n⭐ Note: This is your currently selected college!" : "");
-        }
-
-        if (query.contains("chss") || query.contains("humanities") || query.contains("social")) {
-            return "📚 College of Humanities and Social Sciences (CHSS)\n\n"
-                    + "• Location: West campus area.\n"
-                    + "• Departments: Sociology, Political Science, Languages, History, Geography.\n"
-                    + (userCollege.equalsIgnoreCase("CHSS") ? "\n⭐ Note: This is your currently selected college!" : "");
-        }
-
-        if (query.contains("cnms") || query.contains("natural") || query.contains("math") || query.contains("science") || query.contains("physics") || query.contains("chemistry")) {
-            return "🔬 College of Natural and Mathematical Sciences (CNMS)\n\n"
-                    + "• Location: Science complex area.\n"
-                    + "• Facilities: Mathematics research rooms, advanced physics, chemistry, biology laboratories.\n"
-                    + (userCollege.equalsIgnoreCase("CNMS") ? "\n⭐ Note: This is your currently selected college!" : "");
-        }
-
-        if (query.contains("coese") || query.contains("coet") || query.contains("engineering") || query.contains("mining") || query.contains("geology")) {
-            return "🏗️ College of Earth Sciences and Engineering (CoESE)\n\n"
-                    + "• Location: Engineering campus wing.\n"
-                    + "• Programs: Mining Engineering, Petroleum Geology, Environmental Engineering, Renewable Energy.\n"
-                    + (userCollege.equalsIgnoreCase("CoESE") ? "\n⭐ Note: This is your currently selected college!" : "");
-        }
-
-        if (query.contains("law") || query.contains("sol")) {
-            return "⚖️ School of Law (SoL)\n\n"
-                    + "• Offers Bachelor of Laws (LL.B) and postgraduate legal programs with a dedicated campus moot court.";
-        }
-
-        if (query.contains("somd") || query.contains("medicine") || query.contains("doctor") || query.contains("nursing") || query.contains("sonph")) {
-            return "🩺 School of Medicine & Nursing (SoMD / SoNPH)\n\n"
-                    + "• Location: Health Sciences campus near Benjamin Mkapa Hospital.\n"
-                    + "• Programs: Doctor of Medicine (MD), Pharmacy, Nursing, and Public Health.";
-        }
-
-        if (query.contains("colleges") || query.contains("faculty") || query.contains("faculties") || query.contains("schools")) {
-            return "🏛️ UDOM Colleges & Schools:\n\n"
-                    + "• CIVE – Informatics & Virtual Education\n"
-                    + "• CoBE – Business & Economics\n"
-                    + "• CoED – Education\n"
-                    + "• CHSS – Humanities & Social Sciences\n"
-                    + "• CNMS – Natural & Mathematical Sciences\n"
-                    + "• CoESE – Earth Sciences & Engineering\n"
-                    + "• School of Law (SoL)\n"
-                    + "• School of Medicine (SoMD)\n"
-                    + "• School of Nursing (SoNPH)\n\n"
-                    + "💡 You can select any of these on the HOME screen to customize your profile.";
-        }
-
-        if (query.contains("hostel") || query.contains("accommodation") || query.contains("room") || query.contains("dorm") || query.contains("sleep")) {
-            return "🏠 UDOM Accommodation & Hostels\n\n"
-                    + "• On-Campus: Rooms are organized per college blocks. You apply via your SR2 portal.\n"
-                    + "• For " + userCollege + " students, hostel blocks are designated near your academic complex.\n"
-                    + "• Off-Campus: Popular areas include Mkonze, Kisasa, Medeli, and Chimwaga.";
-        }
-
-        if (query.contains("library") || query.contains("book") || query.contains("reading") || query.contains("study")) {
-            return "📚 UDOM Central Library\n\n"
-                    + "• Location: Central campus.\n"
-                    + "• Opening Hours:\n"
-                    + "   - Mon – Fri: 08:00 AM – 10:00 PM\n"
-                    + "   - Sat: 08:00 AM – 04:00 PM\n"
-                    + "   - Sun: 02:00 PM – 08:00 PM\n"
-                    + "• Carry your Student ID card for entry and book borrowing.";
-        }
-
-        if (query.contains("cafeteria") || query.contains("food") || query.contains("eat") || query.contains("lunch") || query.contains("breakfast") || query.contains("dinner") || query.contains("canteen")) {
-            return getCollegeCafeteriaInfo(userCollege);
-        }
-
-        if (query.contains("fee") || query.contains("control number") || query.contains("gepg") || query.contains("payment") || query.contains("pay") || query.contains("tuition")) {
-            return "💳 Fee Payments & GePG Control Numbers\n\n"
-                    + "1. Sign in to your SR2 account (sr2.udom.ac.tz).\n"
-                    + "2. Go to 'Payment Invoices' and generate a GePG Control Number.\n"
-                    + "3. Pay via Mobile Money (M-Pesa, Airtel, Tigo Pesa, HaloPesa) or CRDB / NMB bank.\n"
-                    + "4. Retain the SMS confirmation receipt.";
-        }
-
-        if (query.contains("sr2") || query.contains("srmis") || query.contains("register") || query.contains("registration") || query.contains("result") || query.contains("portal")) {
-            return "📋 SR2 Student Portal (sr2.udom.ac.tz)\n\n"
-                    + "• Official portal for " + userCollege + " course registration, GPA/results, control numbers, and hostel allocation.\n"
-                    + "• Log in using your Registration Number and password.";
-        }
-
-        if (query.contains("transport") || query.contains("bus") || query.contains("daladala") || query.contains("bajaji") || query.contains("how to reach") || query.contains("shuttle")) {
-            return "🚌 Campus Transport\n\n"
-                    + "• Campus shuttles connect the Roundabout to " + userCollege + " and surrounding colleges.\n"
-                    + "• Daladala city buses run directly between Dodoma Town (Posta) and UDOM.\n"
-                    + "• Bajajis operate at all college gates.";
-        }
-
-        if (query.contains("health") || query.contains("hospital") || query.contains("dispensary") || query.contains("clinic") || query.contains("sick")) {
-            return "🏥 UDOM Health Center\n\n"
-                    + "• Located centrally on campus for primary consultations and outpatient treatment.\n"
-                    + "• Benjamin Mkapa Hospital is nearby for specialized clinical care.";
-        }
-
         if (query.contains("hello") || query.contains("hi") || query.contains("mambo") || query.contains("habari") || query.contains("hey")) {
             return "👋 Hello! I recognize you as a " + userCollege + " student.\n\n"
-                    + "How can I help you today? Ask me about your classes, nearest cafeteria, library, or fees!";
+                    + "How can I help you today? Ask me about your classes, nearest cafeteria, library, hostels, or fees!";
         }
 
+        // 2. Query Knowledge Base directly from SQLite database (Table: campus_faqs)
+        Context context = getContext();
+        if (context != null) {
+            String dbAnswer = DatabaseHelper.getInstance(context).findFaqAnswer(query, userCollege);
+            if (dbAnswer != null && !dbAnswer.isEmpty()) {
+                if (query.contains(userCollege.toLowerCase(Locale.ROOT))) {
+                    dbAnswer += "\n\n⭐ Note: This is your currently selected college!";
+                }
+                return dbAnswer;
+            }
+        }
+
+        // 3. Helpful fallback when no matching knowledge record in SQLite
         return "🤖 Thank you for your question!\n\n"
                 + "Since you are identified as a " + userCollege + " student, you can ask me:\n"
                 + "• 'Where are my classes or lectures?'\n"

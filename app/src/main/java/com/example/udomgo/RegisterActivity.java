@@ -224,6 +224,28 @@ public class RegisterActivity extends AppCompatActivity {
 
 
             // =========================
+            // CHECK EXISTING ACCOUNT & REGISTER
+            // =========================
+
+            if (UserPreferences.hasAccount(RegisterActivity.this, email)) {
+                emailField.setError("An account with this email already exists");
+                emailField.requestFocus();
+                return;
+            }
+
+            // Save new account locally
+            UserPreferences.registerUser(RegisterActivity.this, name, email, password);
+
+            // Establish active session
+            UserPreferences.setLoggedInSession(RegisterActivity.this, email, name);
+
+            android.widget.Toast.makeText(
+                    RegisterActivity.this,
+                    "Account created! Welcome, " + name,
+                    android.widget.Toast.LENGTH_SHORT
+            ).show();
+
+            // =========================
             // OPEN HOME
             // =========================
 

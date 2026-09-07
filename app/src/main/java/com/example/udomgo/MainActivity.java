@@ -2,11 +2,8 @@ package com.example.udomgo;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 
 import androidx.appcompat.app.AppCompatActivity;
-
-import com.example.udomgo.LoginActivity;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -14,17 +11,17 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_main);
+        // Route immediately without artificial delay:
+        // Android's system splash screen displays the app logo during startup,
+        // and this transitions seamlessly straight to the active screen.
+        Intent intent;
+        if (UserPreferences.isLoggedIn(this)) {
+            intent = new Intent(this, HomeActivity.class);
+        } else {
+            intent = new Intent(this, LoginActivity.class);
+        }
 
-        new Handler().postDelayed(() -> {
-
-            Intent intent =
-                    new Intent(MainActivity.this, LoginActivity.class);
-
-            startActivity(intent);
-
-            finish();
-
-        }, 2500);
+        startActivity(intent);
+        finish();
     }
 }

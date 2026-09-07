@@ -2,6 +2,7 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/mainHomeLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -16,6 +17,7 @@
 
     <!-- BOTTOM NAVIGATION -->
     <LinearLayout
+        android:id="@+id/bottomNavBar"
         android:layout_width="match_parent"
         android:layout_height="64dp"
         android:orientation="horizontal"
@@ -41,7 +43,7 @@
                 android:layout_height="26dp"
                 android:clickable="false"
                 android:focusable="false"
-                android:src="@android:drawable/ic_menu_view"
+                android:src="@drawable/ic_nav_home"
                 android:contentDescription="Home"
                 app:tint="#102A43" />
 
@@ -76,7 +78,7 @@
                 android:layout_height="26dp"
                 android:clickable="false"
                 android:focusable="false"
-                android:src="@android:drawable/ic_dialog_email"
+                android:src="@drawable/ic_nav_chat"
                 android:contentDescription="Chat"
                 app:tint="#64748B" />
 
@@ -111,7 +113,7 @@
                 android:layout_height="26dp"
                 android:clickable="false"
                 android:focusable="false"
-                android:src="@android:drawable/ic_menu_mylocation"
+                android:src="@drawable/ic_my_location"
                 android:contentDescription="Map"
                 app:tint="#64748B" />
 
@@ -146,7 +148,7 @@
                 android:layout_height="26dp"
                 android:clickable="false"
                 android:focusable="false"
-                android:src="@android:drawable/ic_menu_manage"
+                android:src="@drawable/ic_nav_guide"
                 android:contentDescription="Guide"
                 app:tint="#64748B" />
 
@@ -181,7 +183,7 @@
                 android:layout_height="26dp"
                 android:clickable="false"
                 android:focusable="false"
-                android:src="@android:drawable/ic_menu_agenda"
+                android:src="@drawable/ic_nav_services"
                 android:contentDescription="Services"
                 app:tint="#64748B" />
 

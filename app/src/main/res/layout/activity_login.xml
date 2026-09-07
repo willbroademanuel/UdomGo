@@ -160,7 +160,7 @@
             android:background="@drawable/create_account_button"
             app:backgroundTint="@null"
             android:text="CREATE ACCOUNT"
-            android:textColor="#FFFFFF"
+            android:textColor="#1976D2"
             android:textSize="15sp"
             android:textStyle="bold"
             android:elevation="3dp" />

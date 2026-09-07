@@ -5,6 +5,7 @@ import android.text.InputType;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.content.Intent;
 
@@ -87,18 +88,41 @@ public class LoginActivity extends AppCompatActivity {
             }
 
 
-            // Temporary success message
-            Toast.makeText(
-                    LoginActivity.this,
-                    "Login successful",
-                    Toast.LENGTH_SHORT
-            ).show();
+            // Authenticate against local storage and built-in demo credentials
+            if (UserPreferences.authenticate(LoginActivity.this, email, password)) {
+                String userName = UserPreferences.getCurrentUserName(LoginActivity.this);
+                Toast.makeText(
+                        LoginActivity.this,
+                        "Login successful! Welcome, " + userName,
+                        Toast.LENGTH_SHORT
+                ).show();
 
-            Intent intent =
-                    new Intent(LoginActivity.this, HomeActivity.class);
-            startActivity(intent);
-            finish();
+                Intent intent =
+                        new Intent(LoginActivity.this, HomeActivity.class);
+                startActivity(intent);
+                finish();
+            } else {
+                if (!UserPreferences.hasAccount(LoginActivity.this, email)) {
+                    emailField.setError("Account not found. Please click CREATE ACCOUNT below.");
+                    emailField.requestFocus();
+                } else {
+                    passwordField.setError("Incorrect password. Please try again.");
+                    passwordField.requestFocus();
+                }
+            }
         });
+
+        // Forgot Password hint
+        TextView forgotPassword = findViewById(R.id.forgotPassword);
+        if (forgotPassword != null) {
+            forgotPassword.setOnClickListener(v -> {
+                new androidx.appcompat.app.AlertDialog.Builder(LoginActivity.this)
+                        .setTitle("Demo & Account Info")
+                        .setMessage("For quick course demo testing, you can use:\n\nEmail: student@udom.ac.tz\nPassword: password123\n\nOr create a new account using CREATE ACCOUNT below.")
+                        .setPositiveButton("OK", null)
+                        .show();
+            });
+        }
 
         Button createAccountButton =
                 findViewById(R.id.createAccountButton);
