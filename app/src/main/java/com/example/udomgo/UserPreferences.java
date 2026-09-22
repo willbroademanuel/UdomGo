@@ -70,6 +70,15 @@ public class UserPreferences {
     }
 
     /**
+     * Updates user password in the SQLite database.
+     */
+    public static boolean updatePassword(Context context, String email, String newPassword) {
+        if (context == null || email == null || newPassword == null) return false;
+        DatabaseHelper db = DatabaseHelper.getInstance(context);
+        return db.updatePassword(email, newPassword);
+    }
+
+    /**
      * Verifies user credentials against the SQLite database.
      */
     public static boolean authenticate(Context context, String email, String password) {

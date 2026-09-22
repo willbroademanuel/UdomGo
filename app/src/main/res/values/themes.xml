@@ -1,8 +1,13 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
     <style name="Base.Theme.UDOMGo" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <!-- System Window Background on App Launch (Dark Navy Blue #102A43) -->
+        <item name="android:windowBackground">@color/launcher_navy_bg</item>
+        <item name="android:windowSplashScreenBackground" tools:targetApi="31">@color/launcher_navy_bg</item>
+        <item name="android:windowSplashScreenAnimatedIcon" tools:targetApi="31">@drawable/splash_logo_scaled</item>
+        <item name="android:windowSplashScreenIconBackgroundColor" tools:targetApi="31">@color/launcher_navy_bg</item>
+        <item name="android:statusBarColor">@color/launcher_navy_bg</item>
+        <item name="android:navigationBarColor">@color/launcher_navy_bg</item>
     </style>
 
     <style name="Theme.UDOMGo" parent="Base.Theme.UDOMGo" />

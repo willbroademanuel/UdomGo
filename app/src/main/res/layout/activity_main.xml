@@ -1,18 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:gravity="center"
-    android:background="#000000">
+    android:background="#102A43">
 
-    <ImageView
-        android:id="@+id/logoImage"
-        android:layout_width="180dp"
-        android:layout_height="180dp"
-        android:src="@drawable/udomgo_logo"
-        android:contentDescription="UDOMGo Logo" />
+    <!-- UDOMGo Title (Text Only) -->
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center">
+
+        <!-- UDOM: Whitish Cream -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="UDOM"
+            android:textColor="#FDFBF7"
+            android:textSize="52sp"
+            android:textStyle="bold"
+            android:fontFamily="sans-serif-black"
+            android:letterSpacing="0.02" />
+
+        <!-- Go: Light Blue -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Go"
+            android:textColor="#38BDF8"
+            android:textSize="52sp"
+            android:textStyle="bold"
+            android:fontFamily="sans-serif-black"
+            android:letterSpacing="0.02" />
+
+    </LinearLayout>
+
+    <!-- Subtitle -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="Campus Companion &amp; Navigation"
+        android:textColor="#94A3B8"
+        android:textSize="14sp"
+        android:letterSpacing="0.05" />
 
 </LinearLayout>

@@ -45,7 +45,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="2dp"
-                    android:text="● Online • Campus Guide &amp; FAQ"
+                    android:text="● UDOM Smart Assistant"
                     android:textColor="#81D4FA"
                     android:textSize="12sp" />
 
@@ -58,7 +58,7 @@
                 android:layout_height="40dp"
                 android:layout_marginEnd="6dp"
                 android:background="?attr/selectableItemBackgroundBorderless"
-                android:src="@drawable/ic_history"
+                android:src="@drawable/ic_menu"
                 android:contentDescription="View Chat History"
                 android:padding="8dp" />
 
@@ -98,6 +98,19 @@
 
         </ScrollView>
 
+
+        <!-- VERTICAL FOLLOW-UP PILLS FOR LATEST RESPONSE -->
+        <LinearLayout
+            android:id="@+id/verticalFollowUpsContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone"
+            android:background="#FFFFFF"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp"
+            android:paddingTop="6dp"
+            android:paddingBottom="6dp" />
 
         <!-- QUICK SUGGESTIONS CAROUSEL -->
         <HorizontalScrollView

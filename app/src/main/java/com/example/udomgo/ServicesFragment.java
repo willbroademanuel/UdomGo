@@ -28,6 +28,7 @@ public class ServicesFragment extends Fragment {
         android.widget.TextView profileNameText = view.findViewById(R.id.profileNameText);
         android.widget.TextView profileEmailText = view.findViewById(R.id.profileEmailText);
         android.widget.Button logoutButton = view.findViewById(R.id.logoutButton);
+        android.widget.Button changePasswordButton = view.findViewById(R.id.changePasswordButton);
 
         if (getContext() != null) {
             String userName = UserPreferences.getCurrentUserName(requireContext());
@@ -39,6 +40,38 @@ public class ServicesFragment extends Fragment {
             if (profileEmailText != null && !userEmail.isEmpty()) {
                 profileEmailText.setText(userEmail);
             }
+        }
+
+        if (changePasswordButton != null) {
+            changePasswordButton.setOnClickListener(v -> {
+                android.widget.EditText input = new android.widget.EditText(requireContext());
+                input.setHint("Enter new password");
+                input.setInputType(android.text.InputType.TYPE_CLASS_TEXT | android.text.InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                android.widget.FrameLayout container_input = new android.widget.FrameLayout(requireContext());
+                android.widget.FrameLayout.LayoutParams params = new  android.widget.FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                params.leftMargin = 50; params.rightMargin = 50;
+                input.setLayoutParams(params);
+                container_input.addView(input);
+
+                new androidx.appcompat.app.AlertDialog.Builder(requireContext())
+                        .setTitle("Change Password")
+                        .setView(container_input)
+                        .setPositiveButton("Update", (dialog, which) -> {
+                            String newPass = input.getText().toString().trim();
+                            if (newPass.length() < 4) {
+                                android.widget.Toast.makeText(requireContext(), "Password too short", android.widget.Toast.LENGTH_SHORT).show();
+                                return;
+                            }
+                            String email = UserPreferences.getCurrentUserEmail(requireContext());
+                            if (UserPreferences.updatePassword(requireContext(), email, newPass)) {
+                                android.widget.Toast.makeText(requireContext(), "Password updated successfully", android.widget.Toast.LENGTH_SHORT).show();
+                            } else {
+                                android.widget.Toast.makeText(requireContext(), "Failed to update password", android.widget.Toast.LENGTH_SHORT).show();
+                            }
+                        })
+                        .setNegativeButton("Cancel", null)
+                        .show();
+            });
         }
 
         if (logoutButton != null) {

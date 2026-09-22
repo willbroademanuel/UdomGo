@@ -29,15 +29,35 @@
             android:scaleType="centerInside"
             android:contentDescription="UDOM Logo" />
 
-        <!-- UDOMGo -->
-        <TextView
+        <!-- UDOMGo Title -->
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:text="UDOMGo"
-            android:textColor="#FFFFFF"
-            android:textSize="26sp"
-            android:textStyle="bold" />
+            android:orientation="horizontal"
+            android:gravity="center">
+
+            <!-- UDOM: Whitish Cream -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="UDOM"
+                android:textColor="#FDFBF7"
+                android:textSize="28sp"
+                android:textStyle="bold"
+                android:fontFamily="sans-serif-black" />
+
+            <!-- Go: Light Blue -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Go"
+                android:textColor="#38BDF8"
+                android:textSize="28sp"
+                android:textStyle="bold"
+                android:fontFamily="sans-serif-black" />
+
+        </LinearLayout>
 
         <TextView
             android:layout_width="wrap_content"
